@@ -1,11 +1,12 @@
 <template>
-    <div class="header">我是header</div>
+    <div>我是goods</div>
 </template>
 
 <script type="text/ecmascript-6">
-    export default{};
+    export default{
+
+    };
 </script>
 
 <style>
-
 </style>
