@@ -14,7 +14,9 @@ const routes = [
 ];
 
 const router = new VueRouter({
-    routes
+    routes: routes,
+    //  linkActiveClass设置高亮的class
+    linkActiveClass: 'active-link'
 });
 
 new Vue({
