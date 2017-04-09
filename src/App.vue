@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-header></v-header>
+        <v-header :seller="seller"></v-header>
         <div class="tab">
             <div class="table-item">
                 <router-link to="/goods" tag="div">商品</router-link>
@@ -18,7 +18,22 @@
 
 <script type="text/ecmascript-6">
     import header from './components/header/header.vue';
+    const ERR_OK = 0;
     export default{
+        data() {
+            return {
+                seller: {}
+            };
+        },
+        created() {
+            this.$http.get('/api/seller').then((res) => {
+                res = res.body;
+                if (res.errno === ERR_OK) {
+                    this.seller = res.data;
+                    console.log(this.seller);
+                }
+            });
+        },
         components: {
             'v-header': header
         }
@@ -26,22 +41,51 @@
 </script>
 
 <style>
-    .tab{
+    .tab {
         display: flex;
-        width:100%;
-        height:40px;
+        width: 100%;
+        height: 40px;
         line-height: 40px;
+        position: relative;
         border-bottom: 1px solid #eeeeee;
     }
-    .table-item{
-        flex-grow:1;
+
+    .tab:after {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+    }
+
+    .table-item {
+        flex-grow: 1;
         text-align: center;
     }
-    .table-item div{
+
+    .table-item div {
         font-size: 14px;
-        color: rgb(77,85,93);
+        color: rgb(77, 85, 93);
     }
-    .table-item>.active-link{
-        color: rgb(240,20,20);
+
+    .table-item > .active-link {
+        color: rgb(240, 20, 20);
+    }
+
+    @media screen and (-webkit-min-device-pixel-ratio: 2) {
+        .tab:after {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            left: 0;
+            bottom: 0;
+            -webkit-transform: (scaleY(0.5));
+            transform: (scaleY(0.5));
+            transform-origin: 0 0;
+        }
     }
 </style>
