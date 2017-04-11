@@ -17,8 +17,25 @@
                     <span class="text">{{seller.supports[0].description}}</span>
                 </div>
             </div>
-            <div v-if="seller.supports" class="support-count">
+            <div v-if="seller.supports" class="support-count" @click="detailShow=true">
                 <span class="count">{{seller.supports.length}}个</span>
+                <i class="icon-keyboard_arrow_right"></i>
+            </div>
+        </div>
+        <div class="bulletin-wrapper" @click="detailShow=true">
+            <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
+            <i class="icon-keyboard_arrow_right"></i>
+        </div>
+        <div class="background">
+            <img :src="seller.avatar" alt="" width="100%" height="100%">
+        </div>
+        <div v-show="detailShow" class="detail">
+            <div class="detail-wrapper clearfix">
+                <div class="detail-main">
+                </div>
+            </div>
+            <div class="detail-close">
+                <i class="icon-close" @click="detailShow=false"></i>
             </div>
         </div>
     </div>
@@ -31,6 +48,11 @@
                 type: Object
             }
         },
+        data() {
+            return {
+                detailShow: false
+            };
+        },
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
         }
@@ -40,7 +62,8 @@
 <style>
     .header {
         color: #fff;
-        background-color: #333;
+        background-color: rgba(7, 17, 27, 0.5);
+        position: relative;
     }
 
     .content-wrapper {
@@ -121,21 +144,103 @@
     .support .special {
         background-image: url("special_1@2x.png");
     }
-    .text{
+
+    .text {
         font-size: 10px;
     }
-    .support-count{
+
+    .support-count {
         position: absolute;
-        right:12px;
-        bottom:18px;
+        right: 12px;
+        bottom: 18px;
         padding: 0 8px;
-        height:24px;
+        height: 24px;
         line-height: 24px;
         border-radius: 14px;
-        background-color: rgba(0,0,0,0.2);
+        background-color: rgba(0, 0, 0, 0.2);
         text-align: center;
     }
-    .support-count .count{
+
+    .support-count .count {
         font-size: 10px;
+    }
+
+    .support-count .icon-keyboard_arrow_right {
+        font-size: 10px;
+        vertical-align: sub;
+        margin-left: 2px;
+    }
+
+    .bulletin-wrapper {
+        height: 28px;
+        line-height: 28px;
+        padding: 0 22px 0 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: rgba(7, 17, 27, 0.2);
+        position: relative;
+    }
+
+    .bulletin-title {
+        display: inline-block;
+        height: 12px;
+        width: 22px;
+        background-image: url("bulletin@2x.png");
+        background-size: 22px 12px;
+        vertical-align: top;
+        margin-top: 8px;
+    }
+
+    .bulletin-text {
+        font-size: 10px;
+        margin: 0 4px;
+        vertical-align: top;
+    }
+
+    .bulletin-wrapper .icon-keyboard_arrow_right {
+        font-size: 10px;
+        position: absolute;
+        top: 8px;
+        right: 12px;
+    }
+
+    .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        filter: blur(10px);
+    }
+
+    .detail {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(7, 17, 27, 0.8);
+        z-index: 10;
+    }
+
+    .detail-wrapper{
+        min-height: 100%;
+    }
+
+    .detail-main{
+        margin-top: 64px;
+        padding-bottom: 64px;
+    }
+
+    .detail-close{
+        position: relative;
+        width:32px;
+        height:32px;
+        margin:-64px auto 0 auto;
+        clear: both;
+        font-size: 32px;
     }
 </style>

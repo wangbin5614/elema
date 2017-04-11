@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-header :seller="seller"></v-header>
-        <div class="tab">
+        <div class="tab border-1px">
             <div class="table-item">
                 <router-link to="/goods" tag="div">商品</router-link>
             </div>
@@ -30,7 +30,6 @@
                 res = res.body;
                 if (res.errno === ERR_OK) {
                     this.seller = res.data;
-                    console.log(this.seller);
                 }
             });
         },
@@ -74,18 +73,4 @@
         color: rgb(240, 20, 20);
     }
 
-    @media screen and (-webkit-min-device-pixel-ratio: 2) {
-        .tab:after {
-            content: "";
-            pointer-events: none;
-            position: absolute;
-            width: 100%;
-            height: 1px;
-            left: 0;
-            bottom: 0;
-            -webkit-transform: (scaleY(0.5));
-            transform: (scaleY(0.5));
-            transform-origin: 0 0;
-        }
-    }
 </style>
