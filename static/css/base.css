@@ -30,6 +30,7 @@ body, html {
         height: 1px;
         left: 0;
         bottom: 0;
+        background: #e5e5e5;
         pointer-events: none;
         -webkit-transform: scaleY(0.5);
         transform: scaleY(0.5);
@@ -47,6 +48,7 @@ body, html {
         height: 1px;
         left: 0;
         bottom: 0;
+        background: #e5e5e5;
         pointer-events: none;
         -webkit-transform: scaleY(0.333);
         transform: scaleY(0.333);

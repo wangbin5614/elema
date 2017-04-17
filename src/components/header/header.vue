@@ -29,30 +29,32 @@
         <div class="background">
             <img :src="seller.avatar" alt="" width="100%" height="100%">
         </div>
-        <div v-show="detailShow" class="detail">
-            <div class="detail-wrapper clearfix">
-                <div class="detail-main">
-                    <h1 class="name">{{seller.name}}</h1>
-                    <div class="star-wrapper">
-                        <star :size="48" :score="seller.score"></star>
-                    </div>
-                    <titleBar :titleBar="'优惠信息'"></titleBar>
-                    <ul v-if="seller.supports" class="supports">
-                        <li v-for="item in seller.supports" class="support-item">
-                            <span class="icon" :class="classMap[item.type]"></span>
-                            <span class="text">{{item.description}}</span>
-                        </li>
-                    </ul>
-                    <titleBar :titleBar="'商家公告'"></titleBar>
-                    <div class="bulletin">
-                        <p>{{seller.bulletin}}</p>
+        <transition name="fade">
+            <div v-show="detailShow" class="detail">
+                <div class="detail-wrapper clearfix">
+                    <div class="detail-main">
+                        <h1 class="name">{{seller.name}}</h1>
+                        <div class="star-wrapper">
+                            <star :size="48" :score="seller.score"></star>
+                        </div>
+                        <titleBar :titleBar="'优惠信息'"></titleBar>
+                        <ul v-if="seller.supports" class="supports">
+                            <li v-for="item in seller.supports" class="support-item">
+                                <span class="icon" :class="classMap[item.type]"></span>
+                                <span class="text">{{item.description}}</span>
+                            </li>
+                        </ul>
+                        <titleBar :titleBar="'商家公告'"></titleBar>
+                        <div class="bulletin">
+                            <p>{{seller.bulletin}}</p>
+                        </div>
                     </div>
                 </div>
+                <div class="detail-close">
+                    <i class="icon-close" @click="detailShow=false"></i>
+                </div>
             </div>
-            <div class="detail-close">
-                <i class="icon-close" @click="detailShow=false"></i>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -243,8 +245,18 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(7, 17, 27, 0.8);
         z-index: 10;
+        background-color: rgba(7, 17, 27, 0.8);
+        backdrop-filter: blur(10px);
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        opacity: 1;
+        transition: all .3s;
+    }
+
+    .fade-enter, .fade-leave-active {
+        opacity: 0
     }
 
     .detail-wrapper {

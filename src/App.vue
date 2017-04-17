@@ -45,18 +45,6 @@
         width: 100%;
         height: 40px;
         line-height: 40px;
-        position: relative;
-        border-bottom: 1px solid #eeeeee;
-    }
-
-    .tab:after {
-        content: "";
-        pointer-events: none;
-        position: absolute;
-        width: 100%;
-        height: 1px;
-        left: 0;
-        bottom: 0;
     }
 
     .table-item {
