@@ -106,7 +106,7 @@
         border-radius: 2px;
     }
 
-    .content {
+    .header .content {
         display: inline-block;
         margin-left: 14px;
     }
