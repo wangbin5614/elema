@@ -28,17 +28,23 @@
                                 <div class="price">
                                     <span class="now">¥{{food.price}}</span><span v-show="food.oldPrice" class="old">¥{{food.oldPrice}}</span>
                                 </div>
+                                <div class="cartcontrol-wrapper">
+                                    <cartcontrol :food="food"></cartcontrol>
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </li>
             </ul>
         </div>
+        <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
     import BScroll from 'better-scroll';
+    import shopcart from 'components/shopcart/shopcart';
+    import cartcontrol from 'components/cartcontrol/cartcontrol';
     const ERROR_OK = 0;
     export default {
         props: {
@@ -115,6 +121,10 @@
                 let el = foodList[index];
                 this.foodsScroll.scrollToElement(el, 300);
             }
+        },
+        components: {
+            'shopcart': shopcart,
+            'cartcontrol': cartcontrol
         }
     };
 </script>
@@ -152,7 +162,7 @@
         background-color: #fff;
         position: relative;
         margin-top: -1px;
-        z-index:10;
+        z-index: 10;
     }
 
     .menu-wrapper .current .text {
@@ -272,5 +282,10 @@
         color: rgb(147, 153, 159);
         text-decoration: line-through;
         font-weight: 700;
+    }
+    .cartcontrol-wrapper{
+        position: absolute;
+        bottom: 10px;
+        right:0;
     }
 </style>
