@@ -2,7 +2,8 @@
     <div class="goods">
         <div class="menu-wrapper" ref="menuWrapper">
             <ul>
-                <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}"
+                <li v-for="(item,index) in goods" class="menu-item menu-item-hook"
+                    :class="{'current':currentIndex===index}"
                     @click="selectMenu(index,$event)">
                     <span class="text border-1px"><span v-show="item.type>0" class="icon"
                                                         :class="classMap[item.type]"></span>{{item.name}}</span>
@@ -87,6 +88,13 @@
                 });
                 this.foodsScroll.on('scroll', (pos) => {
                     this.scrollY = Math.abs(Math.round(pos.y));
+                    let menuList = this.$refs.menuWrapper.getElementsByClassName('menu-item-hook');
+                    for (let i = 1; i < this.listHeight.length; i++) {
+                        if (this.scrollY >= this.listHeight[i - 1] && this.scrollY < this.listHeight[i]) {
+                            this.menuScroll.scrollToElement(menuList[i - 1], 500);
+                            break;
+                        }
+                    }
                 });
             },
             _calculateHeight() {
@@ -142,6 +150,9 @@
 
     .menu-wrapper .current {
         background-color: #fff;
+        position: relative;
+        margin-top: -1px;
+        z-index:10;
     }
 
     .menu-wrapper .current .text {
