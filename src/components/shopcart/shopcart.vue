@@ -151,7 +151,7 @@
 
     .cart-desc {
         display: inline-block;
-        font-size: 14px;
+        font-size: 12px;
         vertical-align: top;
         color: rgba(255, 255, 255, 0.2);
         font-weight: 700;
@@ -172,8 +172,8 @@
     }
 
     .cart-right {
-        flex: 0 0 90px;
-        width: 90px;
+        flex: 0 0 100px;
+        width: 100px;
         height: 48px;
         text-align: center;
         line-height: 48px;
