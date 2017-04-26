@@ -1,6 +1,6 @@
 <template>
     <div class="shopcart">
-        <div class="cart-content">
+        <div class="cart-content" @click="toggleList">
             <div class="cart-left" :class="{'highlight':totalCount>0}">
                 <div class="logo-wrapper">
                     <div class="logo-img">
@@ -13,10 +13,35 @@
             </div>
             <div class="cart-right" :class="payClass">{{payDesc}}</div>
         </div>
+        <transition name="fold">
+            <div class="shopcart-list" v-show="listShow">
+                <div class="list-header">
+                    <h1 class="list-title">购物车</h1>
+                    <span class="list-clean" @click="cleanList">清空</span>
+                </div>
+                <div class="list-content" ref="listcontent">
+                    <ul>
+                        <li class="list-food border-1px" v-for="food in selectFoods">
+                            <span class="list-name">{{food.name}}</span>
+                            <span class="list-price">¥{{food.price*food.count}}</span>
+                            <div class="cartcontrol-wrapper">
+                                <cartcontrol :food="food"></cartcontrol>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </transition>
+        <transition name="fade">
+            <div class="list-background" v-show="listShow"></div>
+        </transition>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import Vue from 'vue';
+    import cartcontrol from 'components/cartcontrol/cartcontrol';
+    import BScroll from 'better-scroll';
     export default {
         props: {
             selectFoods: {
@@ -33,6 +58,11 @@
                 type: Number,
                 default: 0
             }
+        },
+        data () {
+            return {
+                fold: false
+            };
         },
         computed: {
             totalPrice() {
@@ -65,6 +95,42 @@
                 } else {
                     return '';
                 }
+            },
+            listShow() {
+                if (!this.totalCount) {
+                    this.fold = false;
+                    return false;
+                }
+                if (this.fold) {
+                    this.$nextTick(() => {
+                        if (!this.scroll) {
+                            this.scroll = new BScroll(this.$refs.listcontent, {
+                                click: true
+                            });
+                        } else {
+                            this.scroll.refresh();
+                        }
+                    });
+                }
+                return this.fold;
+            }
+        },
+        components: {
+            'cartcontrol': cartcontrol
+        },
+        methods: {
+            toggleList() {
+                if (!this.totalCount) {
+                    return;
+                }
+                this.fold = !this.fold;
+            },
+            cleanList() {
+                this.selectFoods.forEach((food) => {
+                    if (food.count) {
+                        Vue.delete(food, 'count');
+                    }
+                });
             }
         }
     };
@@ -183,5 +249,88 @@
     .enough-pay {
         background-color: #00b43c;
         color: #fff;
+    }
+
+    .fold-enter-active, .fold-leave-active {
+        transition: all .25s linear;
+    }
+
+    .fold-enter, .fold-leave-active {
+        transform: translate3d(0, 100%, 0);
+    }
+
+    .shopcart-list {
+        position: absolute;
+        bottom: 46px;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+    }
+
+    .list-header {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 18px;
+        background-color: #f3f5f7;
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+    }
+
+    .list-title {
+        float: left;
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+    }
+
+    .list-clean {
+        float: right;
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+    }
+
+    .list-content {
+        padding: 0 18px;
+        max-height: 217px;
+        background-color: #fff;
+        overflow: hidden;
+    }
+
+    .list-food {
+        position: relative;
+        padding: 12px 0;
+        box-sizing: border-box;
+    }
+
+    .list-name {
+        font-size: 14px;
+        color: rgb(7, 17, 27);
+        font-weight: 700;
+        line-height: 24px;
+    }
+
+    .list-price {
+        position: absolute;
+        right: 90px;
+        bottom: 12px;
+        line-height: 24px;
+        font-size: 14px;
+        font-weight: 700;
+        color: rgb(240, 20, 20);
+    }
+
+    .cartcontrol-wrapper {
+        position: absolute;
+        right: 0;
+        bottom: 6px;
+    }
+    .list-background{
+        width:100%;
+        height:100vh;
+        position: absolute;
+        bottom:0;
+        left:0;
+        background-color: rgba(7,17,27,0.6);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        z-index:-2;
     }
 </style>
