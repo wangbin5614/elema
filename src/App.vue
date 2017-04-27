@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-header :seller="seller"></v-header>
-        <div class="tab border-1px">
+        <div class="tab border-bottom-1px">
             <div class="table-item">
                 <router-link to="/goods" tag="div">商品</router-link>
             </div>

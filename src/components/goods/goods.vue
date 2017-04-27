@@ -5,7 +5,7 @@
                 <li v-for="(item,index) in goods" class="menu-item menu-item-hook"
                     :class="{'current':currentIndex===index}"
                     @click="selectMenu(index,$event)">
-                    <span class="text border-1px"><span v-show="item.type>0" class="icon"
+                    <span class="text border-bottom-1px"><span v-show="item.type>0" class="icon"
                                                         :class="classMap[item.type]"></span>{{item.name}}</span>
                 </li>
             </ul>
@@ -15,7 +15,7 @@
                 <li v-for="item in goods" class="food-list food-list-hook">
                     <h1 class="subTitle">{{item.name}}</h1>
                     <ul>
-                        <li v-for="food in item.foods" class="food-item border-1px">
+                        <li v-for="food in item.foods" class="food-item border-bottom-1px">
                             <div class="icon">
                                 <img width="57" height="57" :src="food.icon" alt="">
                             </div>
@@ -103,6 +103,8 @@
                 });
                 this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
                     click: true,
+//                   snap: true防止滑动太快左边菜单没及时反应过来就切换了路由，这样会导致报错
+                    snap: true,
                     probeType: 3
                 });
                 this.foodsScroll.on('scroll', (pos) => {
@@ -110,7 +112,7 @@
                     let menuList = this.$refs.menuWrapper.getElementsByClassName('menu-item-hook');
                     for (let i = 1; i < this.listHeight.length; i++) {
                         if (this.scrollY >= this.listHeight[i - 1] && this.scrollY < this.listHeight[i]) {
-                            this.menuScroll.scrollToElement(menuList[i - 1], 500);
+                            this.menuScroll.scrollToElement(menuList[i - 1], 800);
                             break;
                         }
                     }
@@ -182,7 +184,7 @@
         font-weight: 700;
     }
 
-    .menu-wrapper .current .border-1px:after {
+    .menu-wrapper .current .border-bottom-1px:after {
         display: none;
     }
 

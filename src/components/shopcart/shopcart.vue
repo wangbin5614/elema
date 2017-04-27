@@ -21,7 +21,7 @@
                 </div>
                 <div class="list-content" ref="listcontent">
                     <ul>
-                        <li class="list-food border-1px" v-for="food in selectFoods">
+                        <li class="list-food border-bottom-1px" v-for="food in selectFoods">
                             <span class="list-name">{{food.name}}</span>
                             <span class="list-price">¥{{food.price*food.count}}</span>
                             <div class="cartcontrol-wrapper">

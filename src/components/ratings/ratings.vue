@@ -1,43 +1,71 @@
 <template>
-    <div class="ratings">
-        <div class="ratings-score border-1px">
-            <div class="score-left border-right-1px">
-                <div class="score-number">{{seller.score}}</div>
-                <div class="score-title">综合评分</div>
-                <div class="score-rank">高于周边商家{{seller.rankRate}}%</div>
-            </div>
-            <div class="score-right">
-                <div class="score-wrapper">
-                    <span class="score-subtitle">服务态度</span>
-                    <div class="score-star">
-                        <star :size="36" :score="seller.serviceScore"></star>
+    <div class="ratings" ref="ratingsWrapper">
+        <div class="ratings-wrapper">
+            <div class="ratings-score border-bottom-1px">
+                <div class="score-left border-right-1px">
+                    <div class="score-number">{{seller.score}}</div>
+                    <div class="score-title">综合评分</div>
+                    <div class="score-rank">高于周边商家{{seller.rankRate}}%</div>
+                </div>
+                <div class="score-right">
+                    <div class="score-wrapper">
+                        <span class="score-subtitle">服务态度</span>
+                        <div class="score-star">
+                            <star :size="36" :score="seller.serviceScore"></star>
+                        </div>
+                        <span class="score-number">{{seller.serviceScore}}</span>
                     </div>
-                    <span class="score-number">{{seller.serviceScore}}</span>
-                </div>
-                <div class="score-wrapper">
-                    <span class="score-subtitle">商品评分</span>
-                    <div class="score-star">
-                        <star :size="36" :score="seller.foodScore"></star>
+                    <div class="score-wrapper">
+                        <span class="score-subtitle">商品评分</span>
+                        <div class="score-star">
+                            <star :size="36" :score="seller.foodScore"></star>
+                        </div>
+                        <span class="score-number">{{seller.foodScore}}</span>
                     </div>
-                    <span class="score-number">{{seller.foodScore}}</span>
-                </div>
-                <div class="score-wrapper">
-                    <span class="score-subtitle">送达时间</span>
-                    <span class="delivery">{{seller.deliveryTime}}分钟</span>
+                    <div class="score-wrapper">
+                        <span class="score-subtitle">送达时间</span>
+                        <span class="delivery">{{seller.deliveryTime}}分钟</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="rating-content">
-            <div class="rating-select">
-                <div class="rating-type">
-                    <span>全部{{rateType}}</span>
+            <div class="rating-content">
+                <div class="rating-select border-bottom-1px border-top-1px">
+                    <div class="rating-type border-bottom-1px">
+                        <span>全部 {{ratings.length}}</span>
+                        <span>满意 {{rateType[1]}}</span>
+                        <span>不满意 {{rateType[0]}}</span>
+                    </div>
+                    <div class="switch-btn" @click="switchEvent" :class="{'highlight':isHighlight}">
+                        <i class="icon-check_circle"></i>
+                        <span>只看有内容的评价</span>
+                    </div>
                 </div>
+                <ul class="rating-content">
+                    <li class="rating-item border-bottom-1px" v-for="item in ratings">
+                        <div class="rating-avater">
+                            <img width="28" height="28" :src="item.avatar" alt="">
+                        </div>
+                        <div class="rating-detail">
+                            <div class="rating-name">{{item.username}}</div>
+                            <div class="rating-star">
+                                <star :size="24" :score="item.score"></star>
+                                <span class="rating-delivery">{{item.deliveryTime}}分钟送达</span>
+                            </div>
+                            <div class="rating-text">{{item.text}}</div>
+                            <div class="rating-foods">
+                                <i class="icon-thumb_up"></i>
+                                <span v-for="recommend in item.recommend" class="border-1px">{{recommend}}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import BScroll from 'better-scroll';
     import star from 'components/star/star';
     const ERROR_OK = 0;
     export default{
@@ -48,7 +76,8 @@
         },
         data () {
             return {
-                ratings: []
+                ratings: [],
+                isHighlight: false
             };
         },
         created() {
@@ -56,18 +85,30 @@
                 res = res.body;
                 if (res.errno === ERROR_OK) {
                     this.ratings = res.data;
+                    this.$nextTick(() => {
+                        this.scroll = new BScroll(this.$refs.ratingsWrapper, {
+                            click: true
+                        });
+                    });
                 }
             });
         },
         computed: {
             rateType() {
-                let arr = [];
+                let arr = [0, 0];
                 this.ratings.forEach((rating) => {
                     if (rating.rateType === 1) {
-                        arr.push(9);
+                        arr[0]++;
+                    } else {
+                        arr[1]++;
                     }
                 });
                 return arr;
+            }
+        },
+        methods: {
+            switchEvent() {
+                this.isHighlight = !this.isHighlight;
             }
         },
         components: {
@@ -78,14 +119,23 @@
 
 <style>
     .ratings {
+        width: 100%;
         background-color: #f3f5f7;
+        position: absolute;
+        top: 176px;
+        bottom: 0;
+        overflow: hidden;
+    }
+
+    .ratings-wrapper {
+
     }
 
     .ratings-score {
         padding: 18px 0;
         margin-bottom: 16px;
         display: flex;
-        background-color: #fff;
+        background-color: #ffffff;
     }
 
     .score-left {
@@ -154,6 +204,131 @@
         line-height: 18px;
         font-size: 12px;
         vertical-align: top;
+    }
+
+    .rating-content {
+        background-color: #fff;
+    }
+
+    .rating-select {
+        padding: 0 18px;
+    }
+
+    .rating-type {
+        font-size: 0;
+        padding: 18px 0;
+    }
+
+    .rating-type span {
+        display: inline-block;
+        margin-right: 8px;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    .rating-type span:first-child {
+        background-color: #00a0dc;
+        color: #fff;
+    }
+
+    .rating-type span:nth-child(2) {
+        background-color: #ccecf8;
+        color: #5c636a;
+    }
+
+    .rating-type span:last-child {
+        background-color: #e9ebec;
+        color: #5c636a;
+        margin-right: 0;
+    }
+
+    .switch-btn {
+        padding: 15px 0;
+    }
+
+    .switch-btn span {
+        display: inline-block;
+        font-size: 12px;
+        line-height: 20px;
+        vertical-align: top;
+        color: #a4a9ae;
+    }
+
+    .icon-check_circle {
+        color: #b7bbbf;
+        font-size: 20px;
+    }
+
+    .highlight .icon-check_circle {
+        color: #00c850;
+    }
+
+    .rating-content {
+        padding: 0 18px;
+    }
+
+    .rating-item {
+        padding: 18px 0;
+        display: flex;
+    }
+
+    .rating-avater {
+        flex: 0 0 28px;
+        width: 28px;
+    }
+
+    .rating-avater img {
+        border-radius: 50%;
+    }
+
+    .rating-detail {
+        flex: 1;
+        margin-left: 12px;
+    }
+
+    .rating-name {
+        font-size: 10px;
+        color: rgb(7, 17, 27);
+        line-height: 12px;
+    }
+
+    .rating-star {
+        display: flex;
+        justify-content: flex-start;
+        margin: 6px 0 8px;
+    }
+
+    .rating-delivery {
+        font-size: 10px;
+        font-weight: 200;
+        color: rgb(147, 153, 159);
+        line-height: 12px;
+        margin-left: 6px;
+    }
+
+    .rating-text {
+        font-size: 12px;
+        color: rgb(7, 17, 27);
+        line-height: 18px;
+        margin-bottom: 8px;
+    }
+
+    .rating-foods .icon-thumb_up {
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+        line-height: 16px;
+    }
+
+    .rating-foods span {
+        display: inline-block;
+        padding: 0 6px;
+        margin: 0 8px 4px 0;
+        vertical-align: top;
+        border-radius: 2px;
+        font-size: 9px;
+        line-height: 16px;
+        color: rgb(147, 153, 159);
     }
 
     @media only screen and (max-width: 320px) {
