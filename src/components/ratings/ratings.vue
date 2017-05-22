@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <ul class="rating-content">
-                    <li class="rating-item border-bottom-1px" v-for="item in ratings">
+                    <li class="rating-item border-bottom-1px" v-for="item in filterRatings">
                         <div class="rating-avater">
                             <img width="28" height="28" :src="item.avatar" alt="">
                         </div>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="rating-text">{{item.text}}</div>
                             <div class="rating-foods">
-                                <i class="icon-thumb_up"></i>
+                                <i class="icon-thumb_up" v-show="item.rateType==0"></i>
                                 <span v-for="recommend in item.recommend" class="border-1px">{{recommend}}</span>
                             </div>
                         </div>
@@ -77,6 +77,7 @@
         data () {
             return {
                 ratings: [],
+                ratingsArr: [],
                 isHighlight: false
             };
         },
@@ -85,6 +86,7 @@
                 res = res.body;
                 if (res.errno === ERROR_OK) {
                     this.ratings = res.data;
+                    this.ratingsArr = res.data;
                     this.$nextTick(() => {
                         this.scroll = new BScroll(this.$refs.ratingsWrapper, {
                             click: true
@@ -104,11 +106,23 @@
                     }
                 });
                 return arr;
+            },
+            filterRatings() {
+                if (this.isHighlight) {
+                    return this.ratings.filter(function (item) {
+                        return item.text !== '';
+                    });
+                } else {
+                    return this.ratings;
+                }
             }
         },
         methods: {
             switchEvent() {
                 this.isHighlight = !this.isHighlight;
+                this.$nextTick(() => {
+                    this.scroll.refresh();
+                });
             }
         },
         components: {
