@@ -16,7 +16,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .title-wrapper {
         display: flex;
         width: 80%;

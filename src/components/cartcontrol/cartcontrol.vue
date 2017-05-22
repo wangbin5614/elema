@@ -43,7 +43,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .cartcontrol {
         font-size: 0;
     }

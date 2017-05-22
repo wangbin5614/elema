@@ -42,7 +42,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .star {
         font-size: 0;
     }

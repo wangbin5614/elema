@@ -144,7 +144,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .goods {
         display: flex;
         position: absolute;

@@ -82,7 +82,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .header {
         color: #fff;
         background-color: rgba(7, 17, 27, 0.5);

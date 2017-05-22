@@ -131,7 +131,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .ratings {
         width: 100%;
         background-color: #f3f5f7;
@@ -139,10 +139,6 @@
         top: 176px;
         bottom: 0;
         overflow: hidden;
-    }
-
-    .ratings-wrapper {
-
     }
 
     .ratings-score {

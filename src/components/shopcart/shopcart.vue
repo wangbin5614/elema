@@ -136,7 +136,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .shopcart {
         position: fixed;
         bottom: 0;
