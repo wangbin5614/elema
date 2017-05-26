@@ -1,5 +1,5 @@
 <template>
-    <div class="seller"  ref="sellerWrapper">
+    <div class="seller"  ref="sellerScroll">
         <div class="seller-wrapper">
             <div class="seller-desc border-bottom-1px">
                 <div class="seller-desc-top border-bottom-1px">
@@ -52,7 +52,7 @@
             <div class="split"></div>
             <div class="seller-pics">
                 <h3 class="subtitle">商家实景</h3>
-                <div class="pics-wrapper">
+                <div class="pics-wrapper" ref="picScroll">
                     <ul>
                         <li v-for="item in seller.pics"><img :src="item" alt="" width="120" height="90"></li>
                     </ul>
@@ -88,7 +88,14 @@
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
             this.$nextTick(() => {
-                this.sellerScroll = new BScroll(this.$refs.sellerWrapper, {
+                this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
+                    click: true,
+                    startX: 0,
+                    startY: 0,
+                    bounce: true
+                });
+                this.picScroll = new BScroll(this.$refs.picScroll, {
+                    scrollX: true,
                     click: true
                 });
             });
@@ -106,7 +113,13 @@
 </script>
 
 <style scoped>
-
+    .seller{
+        position: absolute;
+        width: 100%;
+        top: 176px;
+        bottom: 46px;
+        overflow: hidden;
+    }
     .seller-desc-top {
         display: flex;
         justify-content: space-between;
@@ -247,7 +260,9 @@
         color: rgb(7, 17, 27);
         line-height: 16px;
     }
-
+    .pics-wrapper{
+        width:1000px;
+    }
     .pics-wrapper ul {
         display: flex;
     }

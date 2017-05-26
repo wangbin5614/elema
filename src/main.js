@@ -27,4 +27,4 @@ new Vue({
 }).$mount('#app');
 
 //  设置默认进来的页面
-router.push('/seller');
+router.push('/goods');
