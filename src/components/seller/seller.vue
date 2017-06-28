@@ -1,5 +1,5 @@
 <template>
-    <div class="seller"  ref="sellerScroll">
+    <div class="seller" ref="sellerScroll">
         <div class="seller-wrapper">
             <div class="seller-desc border-bottom-1px">
                 <div class="seller-desc-top border-bottom-1px">
@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="seller-collect">
-                        <i class="icon-favorite" :class="{'red-icon-favorite':hasCollect}" @click="collect"></i>
+                        <i class="icon-favorite" :class="{'red-icon-favorite':hasCollect}" @click="collect($event)"></i>
                         <div v-show="hasCollect" class="collect-text">已收藏</div>
                         <div v-show="!hasCollect" class="collect-text">收藏</div>
                     </div>
@@ -53,7 +53,7 @@
             <div class="seller-pics">
                 <h3 class="subtitle">商家实景</h3>
                 <div class="pics-wrapper" ref="picScroll">
-                    <ul>
+                    <ul ref="picList">
                         <li v-for="item in seller.pics"><img :src="item" alt="" width="120" height="90"></li>
                     </ul>
                 </div>
@@ -88,20 +88,38 @@
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
             this.$nextTick(() => {
+                this._initPics();
                 this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
                     click: true,
                     startX: 0,
                     startY: 0,
                     bounce: true
                 });
-                this.picScroll = new BScroll(this.$refs.picScroll, {
-                    scrollX: true,
-                    click: true
-                });
             });
         },
         methods: {
-            collect() {
+            _initPics() {
+                if (this.seller.pics) {
+                    let picWidth = 120;
+                    let margin = 6;
+                    let width = (picWidth + margin) * this.seller.pics.length - margin;
+                    this.$refs.picList.style.width = width + 'px';
+                    this.$nextTick(() => {
+                        if (!this.picScroll) {
+                            this.picScroll = new BScroll(this.$refs.picScroll, {
+                                scrollX: true,
+                                eventPassthrough: 'vertical'
+                            });
+                        } else {
+                            this.picScroll.refresh();
+                        }
+                    });
+                }
+            },
+            collect(event) {
+                if (!event._constructed) {
+                    return;
+                }
                 this.hasCollect = !this.hasCollect;
             }
         },
@@ -113,13 +131,14 @@
 </script>
 
 <style scoped>
-    .seller{
+    .seller {
         position: absolute;
         width: 100%;
         top: 176px;
         bottom: 46px;
         overflow: hidden;
     }
+
     .seller-desc-top {
         display: flex;
         justify-content: space-between;
@@ -260,9 +279,11 @@
         color: rgb(7, 17, 27);
         line-height: 16px;
     }
-    .pics-wrapper{
-        width:1000px;
+
+    .pics-wrapper {
+        overflow: hidden;
     }
+
     .pics-wrapper ul {
         display: flex;
     }
