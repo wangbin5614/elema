@@ -6,7 +6,7 @@
                     :class="{'current':currentIndex===index}"
                     @click="selectMenu(index,$event)">
                     <span class="text border-bottom-1px"><span v-show="item.type>0" class="icon"
-                                                        :class="classMap[item.type]"></span>{{item.name}}</span>
+                                                               :class="classMap[item.type]"></span>{{item.name}}</span>
                 </li>
             </ul>
         </div>
@@ -26,7 +26,8 @@
                                     <span>月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                                 </div>
                                 <div class="price">
-                                    <span class="now">¥{{food.price}}</span><span v-show="food.oldPrice" class="old">¥{{food.oldPrice}}</span>
+                                    <span class="now">¥{{food.price}}</span><span v-show="food.oldPrice"
+                                                                                  class="old">¥{{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper" ref="cartButton">
                                     <cartcontrol :food="food"></cartcontrol>

@@ -66,7 +66,7 @@
                 </ul>
             </div>
         </div>
-        <shopcart></shopcart>
+        <!--<shopcart></shopcart>-->
     </div>
 </template>
 
@@ -87,15 +87,16 @@
         },
         created() {
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-            this.$nextTick(() => {
+        },
+        mounted() {
+            this._initSeller();
+            this._initPics();
+        },
+        watch: {
+            seller: function () {
+                this._initSeller();
                 this._initPics();
-                this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
-                    click: true,
-                    startX: 0,
-                    startY: 0,
-                    bounce: true
-                });
-            });
+            }
         },
         methods: {
             _initPics() {
@@ -116,6 +117,17 @@
                     });
                 }
             },
+            _initSeller() {
+                this.$nextTick(() => {
+                    if (!this.sellerScroll) {
+                        this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
+                            click: true
+                        });
+                    } else {
+                        this.sellerScroll.refresh();
+                    }
+                });
+            },
             collect(event) {
                 if (!event._constructed) {
                     return;
@@ -135,7 +147,7 @@
         position: absolute;
         width: 100%;
         top: 176px;
-        bottom: 46px;
+        bottom: 0;
         overflow: hidden;
     }
 
