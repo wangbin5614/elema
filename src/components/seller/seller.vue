@@ -92,12 +92,6 @@
             this._initSeller();
             this._initPics();
         },
-        watch: {
-            seller: function () {
-                this._initSeller();
-                this._initPics();
-            }
-        },
         methods: {
             _initPics() {
                 if (this.seller.pics) {
@@ -118,7 +112,7 @@
                 }
             },
             _initSeller() {
-                this.$nextTick(() => {
+                setTimeout(() => {
                     if (!this.sellerScroll) {
                         this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
                             click: true
@@ -126,7 +120,7 @@
                     } else {
                         this.sellerScroll.refresh();
                     }
-                });
+                }, 0);
             },
             collect(event) {
                 if (!event._constructed) {

@@ -21,10 +21,10 @@ const router = new VueRouter({
     linkActiveClass: 'active-link'
 });
 
+/* eslint-disable no-new */
 new Vue({
+    el: '#app',
     router: router,
-    render: h => h(App)
-}).$mount('#app');
-
-//  设置默认进来的页面
-router.push('/seller');
+    template: '<App/>',
+    components: {App}
+});
