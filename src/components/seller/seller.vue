@@ -66,7 +66,6 @@
                 </ul>
             </div>
         </div>
-        <!--<shopcart></shopcart>-->
     </div>
 </template>
 
@@ -89,8 +88,10 @@
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
         },
         mounted() {
-            this._initSeller();
-            this._initPics();
+            setTimeout(() => {
+                this._initSeller();
+                this._initPics();
+            }, 10);
         },
         methods: {
             _initPics() {
@@ -99,28 +100,24 @@
                     let margin = 6;
                     let width = (picWidth + margin) * this.seller.pics.length - margin;
                     this.$refs.picList.style.width = width + 'px';
-                    this.$nextTick(() => {
-                        if (!this.picScroll) {
-                            this.picScroll = new BScroll(this.$refs.picScroll, {
-                                scrollX: true,
-                                eventPassthrough: 'vertical'
-                            });
-                        } else {
-                            this.picScroll.refresh();
-                        }
-                    });
+                    if (!this.picScroll) {
+                        this.picScroll = new BScroll(this.$refs.picScroll, {
+                            scrollX: true,
+                            eventPassthrough: 'vertical'
+                        });
+                    } else {
+                        this.picScroll.refresh();
+                    }
                 }
             },
             _initSeller() {
-                setTimeout(() => {
-                    if (!this.sellerScroll) {
-                        this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
-                            click: true
-                        });
-                    } else {
-                        this.sellerScroll.refresh();
-                    }
-                }, 0);
+                if (!this.sellerScroll) {
+                    this.sellerScroll = new BScroll(this.$refs.sellerScroll, {
+                        click: true
+                    });
+                } else {
+                    this.sellerScroll.refresh();
+                }
             },
             collect(event) {
                 if (!event._constructed) {
