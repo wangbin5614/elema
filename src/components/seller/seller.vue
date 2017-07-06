@@ -38,7 +38,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="split"></div>
+            <div class="split border-bottom-1px border-top-1px"></div>
             <div class="seller-bulletin">
                 <h3 class="subtitle">公告与活动</h3>
                 <div class="bulletin-text">{{seller.bulletin}}</div>
@@ -49,7 +49,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="split"></div>
+           <split></split>
             <div class="seller-pics">
                 <h3 class="subtitle">商家实景</h3>
                 <div class="pics-wrapper" ref="picScroll">
@@ -58,7 +58,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="split"></div>
+            <split></split>
             <div class="seller-info">
                 <h3 class="subtitle">商家信息</h3>
                 <ul class="info-list">
@@ -72,6 +72,7 @@
 <script type="text/ecmascript-6">
     import BScroll from 'better-scroll';
     import star from 'components/star/star';
+    import split from 'components/split/split';
     import shopcart from 'components/shopcart/shopcart';
     export default{
         props: {
@@ -128,7 +129,8 @@
         },
         components: {
             'star': star,
-            'shopcart': shopcart
+            'shopcart': shopcart,
+            'split': split
         }
     };
 </script>
@@ -219,11 +221,6 @@
         font-weight: 200;
     }
 
-    .split {
-        height: 16px;
-        background-color: #f3f5f7;
-    }
-
     .seller-bulletin, .seller-desc, .seller-pics, .seller-info {
         padding: 18px 18px 0;
     }
@@ -292,7 +289,7 @@
     }
 
     .pics-wrapper li {
-        margin: 12px 6px 0 0;
+        margin: 12px 6px 18px 0;
     }
 
     .pics-wrapper li:last-child {

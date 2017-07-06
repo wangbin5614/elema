@@ -146,7 +146,6 @@
                     return;
                 }
                 this.selectedFood = food;
-                console.log(this.$refs.food);
                 this.$refs.food.show();
             }
         },
