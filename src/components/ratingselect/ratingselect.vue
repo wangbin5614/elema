@@ -2,15 +2,15 @@
     <div class="ratingselect">
         <div class="rating-type border-bottom-1px">
             <span class="block positive" @click="select(2,$event)"
-                  :class="{'positive-active':type===2}">{{desc.all}}<span class="count">11</span></span>
+                  :class="{'positive-active':VselectType===2}">{{desc.all}}<span class="count">11</span></span>
             <span class="block positive" @click="select(0,$event)"
-                  :class="{'positive-active':type===0}">{{desc.positive}}<span class="count">8</span></span>
+                  :class="{'positive-active':VselectType===0}">{{desc.positive}}<span class="count">8</span></span>
             <span class="block negative" @click="select(1,$event)"
-                  :class="{'negative-active':type===1}">{{desc.negative}}<span class="count">3</span></span>
+                  :class="{'negative-active':VselectType===1}">{{desc.negative}}<span class="count">3</span></span>
         </div>
-        <div class="switch">
-            <i class="icon-check_circle" :class="{'on':onlyContent}"></i>
-            <span class="text">只看有内容的评价</span>
+        <div class="switch" @click="toggleContent($event)">
+            <i class="icon-check_circle" :class="{'on':VonlyContent}" ></i>
+            <span class="text">只看有内容的评价{{count}}</span>
         </div>
         <div class="rating-content">
             <ul>
@@ -53,15 +53,31 @@
         },
         data() {
             return {
-                type: this.selectType
+                VselectType: this.selectType,
+                VonlyContent: this.onlyContent
             };
         },
+        computed: {
+            count () {
+                return this.$store.state.count;
+            }
+        },
         methods: {
+            initData () {
+                this.VselectType = this.selectType;
+                this.VonlyContent = this.onlyContent;
+            },
             select (index, event) {
                 if (!event._constructed) {
                     return;
                 }
-                this.type = index;
+                this.VselectType = index;
+            },
+            toggleContent (event) {
+                if (!event._constructed) {
+                    return;
+                }
+                this.VonlyContent = !this.VonlyContent;
             }
         }
     };

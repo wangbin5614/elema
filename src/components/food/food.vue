@@ -86,7 +86,7 @@
             },
             hideFood () {
                 this.isShow = !this.isShow;
-                this.$refs.ratingselect.type = ALL;
+                this.$refs.ratingselect.initData();
             }
         },
         components: {
