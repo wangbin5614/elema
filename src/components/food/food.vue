@@ -27,14 +27,28 @@
                 </div>
                 <split></split>
                 <div class="info">
-                    <h1>商品介绍{{selectType}}</h1>
+                    <h1>商品介绍</h1>
                     <p>{{food.info}}</p>
                 </div>
                 <split></split>
                 <div class="rating">
                     <h1>商品评价</h1>
-                    <ratingselect ref="ratingselect" :ratings="food.ratings" :select-type="selectType" :desc="desc"
-                                  :only-content="false"></ratingselect>
+                    <ratingselect ref="ratingselect" :ratings="food.ratings" :desc="desc"></ratingselect>
+                    <div class="rating-wrapper">
+                        <ul>
+                            <li class="border-bottom-1px" v-for="item in ratingsDetail">
+                                <div class="rate-time">{{item.rateTime}}</div>
+                                <div class="rate-text">
+                                    <i :class="item.rateType === 0?'icon-thumb_up':'icon-thumb_down'"></i>
+                                    <span>{{item.text}}</span>
+                                </div>
+                                <div class="user-info">
+                                    <span>{{item.username}}</span>
+                                    <img width="12" height="12" :src="item.avatar" alt="">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,7 +61,6 @@
     import cartcontrol from 'components/cartcontrol/cartcontrol';
     import split from 'components/split/split';
     import ratingselect from 'components/ratingselect/ratingselect';
-    const ALL = 2;
     export default {
         props: {
             food: {
@@ -61,11 +74,60 @@
                     all: '全部',
                     positive: '推荐',
                     negative: '吐槽'
-                },
-                selectType: ALL
+                }
             };
         },
+        computed: {
+            ratingsDetail () {
+                if (this.scroll) {
+                    this.$nextTick(() => {
+                        this.scroll.refresh();
+                    });
+                }
+                this.food.ratings.forEach((rating) => {
+                    rating.rateTime = this._initTime(rating.rateTime);
+                });
+                if (this.$store.state.onlyContent) {
+                    if (this.$store.state.selectType === 1) {
+                        return this.food.ratings.filter((rating) => {
+                            return (rating.rateType === 1 && rating.text !== '');
+                        });
+                    } else if (this.$store.state.selectType === 0) {
+                        return this.food.ratings.filter((rating) => {
+                            return (rating.rateType === 0 && rating.text !== '');
+                        });
+                    } else {
+                        return this.food.ratings.filter((rating) => {
+                            return rating.text !== '';
+                        });
+                    }
+                } else {
+                    if (this.$store.state.selectType === 1) {
+                        return this.food.ratings.filter((rating) => {
+                            return rating.rateType === 1;
+                        });
+                    } else if (this.$store.state.selectType === 0) {
+                        return this.food.ratings.filter((rating) => {
+                            return rating.rateType === 0;
+                        });
+                    } else {
+                        return this.food.ratings.filter((rating) => {
+                            return this.food.ratings;
+                        });
+                    }
+                }
+            }
+        },
         methods: {
+            _initTime (time) {
+                let date = new Date(time);
+                let month = (date.getMonth() + 1) > 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                let day = date.getDate() > 10 ? date.getDate() : '0' + date.getDate();
+                let hour = date.getHours() > 10 ? date.getHours() : '0' + date.getHours();
+                let minute = date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes();
+                let second = date.getSeconds() > 10 ? date.getSeconds() : '0' + date.getSeconds();
+                return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+            },
             show () {
                 this.isShow = !this.isShow;
                 this.$nextTick(() => {
@@ -235,5 +297,73 @@
         font-weight: 700;
         color: rgb(7, 17, 27);
         line-height: 14px;
+    }
+
+    .rating-wrapper {
+        padding: 0 18px;
+    }
+
+    .rating-wrapper li {
+        position: relative;
+        padding: 16px 0;
+    }
+
+    .rate-time {
+        font-size: 10px;
+        line-height: 12px;
+        color: rgb(147, 153, 159);
+        margin-bottom: 6px;
+    }
+
+    .rate-text {
+        font-size: 0;
+        line-height: 16px;
+    }
+
+    .rate-text .icon-thumb_up {
+        display: inline-block;
+        font-size: 12px;
+        color: rgb(0, 160, 220);
+        margin-right: 4px;
+        line-height: 18px;
+        vertical-align: top;
+    }
+
+    .rate-text span {
+        display: inline-block;
+        font-size: 12px;
+        color: rgb(7, 17, 27);
+        vertical-align: top;
+    }
+
+    .rate-text .icon-thumb_down {
+        display: inline-block;
+        font-size: 12px;
+        color: rgb(147, 153, 159);
+        margin-right: 4px;
+        line-height: 18px;
+        vertical-align: top;
+    }
+
+    .user-info {
+        font-size: 0;
+        position: absolute;
+        right: 0;
+        top: 16px;
+    }
+
+    .user-info span {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 10px;
+        color: rgb(147, 153, 159);
+        line-height: 12px;
+        margin-right: 6px;
+    }
+
+    .user-info img {
+        display: inline-block;
+        vertical-align: top;
+        border-radius: 50%;
     }
 </style>

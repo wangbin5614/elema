@@ -41,7 +41,7 @@
         </div>
         <shopcart :select-foods="selectedFoods" :delivery-price="seller.deliveryPrice"
                   :min-price="seller.minPrice"></shopcart>
-        <food :food="selectedFood" ref="food"></food>
+        <food :food="selectedFood" ref="food" v-if="selectedFood.name"></food>
     </div>
 </template>
 
@@ -101,6 +101,13 @@
                 return foods;
             }
         },
+        watch: {
+            selectedFood (curVal, oldVal) {
+                if (oldVal.name) {
+                    this.$store.commit('initState');
+                }
+            }
+        },
         methods: {
             _initScroll() {
                 this.menuScroll = new BScroll(this.$refs.menuWrapper, {
@@ -146,7 +153,9 @@
                     return;
                 }
                 this.selectedFood = food;
-                this.$refs.food.show();
+                setTimeout(() => {
+                    this.$refs.food.show();
+                }, 100);
             }
         },
         components: {

@@ -24,9 +24,21 @@ const router = new VueRouter({
     linkActiveClass: 'active-link'
 });
 
+const bool = false;
+const ALL = 2;
 const vuex = new Vuex.Store({
     state: {
-        count: 1
+        onlyContent: bool,
+        selectType: ALL
+    },
+    mutations: {
+        initState (state) {
+            state.onlyContent = bool;
+            state.selectType = ALL;
+        },
+        toggleContent (state) {
+            state.onlyContent = !state.onlyContent;
+        }
     }
 });
 
