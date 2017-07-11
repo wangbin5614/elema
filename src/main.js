@@ -18,28 +18,40 @@ const routes = [
     {path: '/seller', name: 'seller', component: seller}
 ];
 
-const router = new VueRouter({
-    routes: routes,
-    //  linkActiveClass设置高亮的class
-    linkActiveClass: 'active-link'
-});
-
 const bool = false;
 const ALL = 2;
 const vuex = new Vuex.Store({
     state: {
         onlyContent: bool,
-        selectType: ALL
+        selectType: ALL,
+        targetPosi: {}
     },
     mutations: {
         initState (state) {
             state.onlyContent = bool;
             state.selectType = ALL;
         },
+        changePosi(state, pos) {
+            state.targetPosi = pos;
+        },
+        initPosi (state) {
+            state.targetPosi = {};
+        },
         toggleContent (state) {
             state.onlyContent = !state.onlyContent;
         }
     }
+});
+
+const router = new VueRouter({
+    routes: routes,
+    //  linkActiveClass设置高亮的class
+    linkActiveClass: 'active-link'
+});
+
+router.beforeEach((to, from, next) => {
+    vuex.commit('initState');
+    next();
 });
 
 /* eslint-disable no-new */

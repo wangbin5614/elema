@@ -1,7 +1,7 @@
 <template>
     <div class="ratings" ref="ratingsWrapper">
         <div class="ratings-wrapper">
-            <div class="ratings-score border-bottom-1px">
+            <div class="ratings-score">
                 <div class="score-left border-right-1px">
                     <div class="score-number">{{seller.score}}</div>
                     <div class="score-title">综合评分</div>
@@ -28,20 +28,11 @@
                     </div>
                 </div>
             </div>
-            <div class="rating-content">
-                <div class="rating-select border-bottom-1px border-top-1px">
-                    <div class="rating-type border-bottom-1px">
-                        <span>全部 {{ratings.length}}</span>
-                        <span>满意 {{rateType[1]}}</span>
-                        <span>不满意 {{rateType[0]}}</span>
-                    </div>
-                    <div class="switch-btn" @click="switchEvent" :class="{'highlight':isHighlight}">
-                        <i class="icon-check_circle"></i>
-                        <span>只看有内容的评价</span>
-                    </div>
-                </div>
+            <split></split>
+            <div class="rating-wrapper">
+                <ratingselect ref="ratingselect" :ratings="ratings" :desc="desc"></ratingselect>
                 <ul class="rating-content">
-                    <li class="rating-item border-bottom-1px" v-for="item in filterRatings">
+                    <li class="rating-item border-bottom-1px" v-for="item in ratingsDetail">
                         <div class="rating-avater">
                             <img width="28" height="28" :src="item.avatar" alt="">
                         </div>
@@ -53,7 +44,7 @@
                             </div>
                             <div class="rating-text">{{item.text}}</div>
                             <div class="rating-foods">
-                                <i class="icon-thumb_up" v-show="item.rateType==0"></i>
+                                <i :class="item.rateType === 0?'icon-thumb_up':'icon-thumb_down'"></i>
                                 <span v-for="recommend in item.recommend" class="border-1px">{{recommend}}</span>
                             </div>
                         </div>
@@ -67,6 +58,8 @@
 <script type="text/ecmascript-6">
     import BScroll from 'better-scroll';
     import star from 'components/star/star';
+    import ratingselect from 'components/ratingselect/ratingselect';
+    import split from 'components/split/split';
     const ERROR_OK = 0;
     export default{
         props: {
@@ -77,8 +70,11 @@
         data () {
             return {
                 ratings: [],
-                ratingsArr: [],
-                isHighlight: false
+                desc: {
+                    all: '全部',
+                    positive: '满意',
+                    negative: '不满意'
+                }
             };
         },
         created() {
@@ -96,37 +92,61 @@
             });
         },
         computed: {
-            rateType() {
-                let arr = [0, 0];
-                this.ratings.forEach((rating) => {
-                    if (rating.rateType === 1) {
-                        arr[0]++;
-                    } else {
-                        arr[1]++;
-                    }
-                });
-                return arr;
-            },
-            filterRatings() {
-                if (this.isHighlight) {
-                    return this.ratings.filter(function (item) {
-                        return item.text !== '';
+            ratingsDetail () {
+                if (this.scroll) {
+                    this.$nextTick(() => {
+                        this.scroll.refresh();
                     });
+                }
+                this.ratings.forEach((rating) => {
+                    rating.rateTime = this._initTime(rating.rateTime);
+                });
+                if (this.$store.state.onlyContent) {
+                    if (this.$store.state.selectType === 1) {
+                        return this.ratings.filter((rating) => {
+                            return (rating.rateType === 1 && rating.text !== '');
+                        });
+                    } else if (this.$store.state.selectType === 0) {
+                        return this.ratings.filter((rating) => {
+                            return (rating.rateType === 0 && rating.text !== '');
+                        });
+                    } else {
+                        return this.ratings.filter((rating) => {
+                            return rating.text !== '';
+                        });
+                    }
                 } else {
-                    return this.ratings;
+                    if (this.$store.state.selectType === 1) {
+                        return this.ratings.filter((rating) => {
+                            return rating.rateType === 1;
+                        });
+                    } else if (this.$store.state.selectType === 0) {
+                        return this.ratings.filter((rating) => {
+                            return rating.rateType === 0;
+                        });
+                    } else {
+                        return this.ratings.filter((rating) => {
+                            return this.ratings;
+                        });
+                    }
                 }
             }
         },
         methods: {
-            switchEvent() {
-                this.isHighlight = !this.isHighlight;
-                this.$nextTick(() => {
-                    this.scroll.refresh();
-                });
+            _initTime (time) {
+                let date = new Date(time);
+                let month = (date.getMonth() + 1) > 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                let day = date.getDate() > 10 ? date.getDate() : '0' + date.getDate();
+                let hour = date.getHours() > 10 ? date.getHours() : '0' + date.getHours();
+                let minute = date.getMinutes() > 10 ? date.getMinutes() : '0' + date.getMinutes();
+                let second = date.getSeconds() > 10 ? date.getSeconds() : '0' + date.getSeconds();
+                return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
             }
         },
         components: {
-            'star': star
+            'star': star,
+            'ratingselect': ratingselect,
+            'split': split
         }
     };
 </script>
@@ -143,7 +163,6 @@
 
     .ratings-score {
         padding: 18px 0;
-        margin-bottom: 16px;
         display: flex;
         background-color: #ffffff;
     }
@@ -216,7 +235,7 @@
         vertical-align: top;
     }
 
-    .rating-content {
+    .rating-wrapper{
         background-color: #fff;
     }
 
@@ -327,6 +346,12 @@
     .rating-foods .icon-thumb_up {
         font-size: 12px;
         color: rgb(0, 160, 220);
+        line-height: 16px;
+    }
+
+    .rating-foods .icon-thumb_down {
+        font-size: 12px;
+        color: rgb(147, 153, 159);
         line-height: 16px;
     }
 

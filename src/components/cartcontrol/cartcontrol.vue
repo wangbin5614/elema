@@ -21,10 +21,27 @@
             }
         },
         methods: {
+            getTop(e) {
+                let offsetTop = e.offsetTop;
+                if (e.offsetParent != null) {
+                    offsetTop += this.getTop(e.offsetParent);
+                }
+                return offsetTop;
+            },
+            getLeft(e) {
+                let offsetLeft = e.offsetLeft;
+                if (e.offsetParent != null) {
+                    offsetLeft += this.getLeft(e.offsetParent);
+                }
+                return offsetLeft;
+            },
             addCart(event) {
                 if (!event._constructed) {
                     return;
                 }
+                this.$store.commit('changePosi', event.target);
+                console.log(this.getTop(event.target));
+                console.log(this.getLeft(event.target));
                 if (!this.food.count) {
                     Vue.set(this.food, 'count', 1);
                 } else {
@@ -60,16 +77,13 @@
     .cart-decrease, .cart-add {
         display: inline-block;
         padding: 6px;
+        transition: all .5s linear;
     }
 
     .cart-decrease .icon-remove_circle_outline, .cart-add .icon-add_circle {
         font-size: 24px;
         line-height: 24px;
         color: rgb(0, 160, 220);
-    }
-
-    .enter-enter-active, .enter-leave-active {
-        transition: all .5s linear;
     }
 
     .enter-enter, .enter-leave-active {

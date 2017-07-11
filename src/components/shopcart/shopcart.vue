@@ -23,7 +23,7 @@
                     <ul>
                         <li class="list-food border-bottom-1px" v-for="food in selectFoods">
                             <span class="list-name">{{food.name}}</span>
-                            <span class="list-price">¥{{food.price*food.count}}</span>
+                            <span class="list-price">¥{{food.price * food.count}}</span>
                             <div class="cartcontrol-wrapper">
                                 <cartcontrol :food="food"></cartcontrol>
                             </div>
@@ -33,8 +33,15 @@
             </div>
         </transition>
         <transition name="fade">
-            <div class="list-background" v-show="listShow"></div>
+            <div class="list-background" v-show="listShow" @click="hideList"></div>
         </transition>
+        <div class="ball-container">
+            <transition-group name="drop">
+                <div v-for="(ball,index) in balls" v-show="ball.show" class="ball" :key="index">
+                    <div class="inner"></div>
+                </div>
+            </transition-group>
+        </div>
     </div>
 </template>
 
@@ -61,7 +68,24 @@
         },
         data () {
             return {
-                fold: false
+                fold: false,
+                balls: [
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    },
+                    {
+                        show: false
+                    }
+                ]
             };
         },
         computed: {
@@ -113,6 +137,9 @@
                     });
                 }
                 return this.fold;
+            },
+            drop() {
+                console.log(1111);
             }
         },
         components: {
@@ -124,6 +151,9 @@
                     return;
                 }
                 this.fold = !this.fold;
+            },
+            hideList() {
+                this.fold = false;
             },
             cleanList() {
                 this.selectFoods.forEach((food) => {
@@ -322,15 +352,35 @@
         right: 0;
         bottom: 6px;
     }
-    .list-background{
-        width:100%;
-        height:100vh;
+
+    .list-background {
+        width: 100%;
+        height: 100vh;
         position: absolute;
-        bottom:0;
-        left:0;
-        background-color: rgba(7,17,27,0.6);
+        bottom: 0;
+        left: 0;
+        background-color: rgba(7, 17, 27, 0.6);
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
-        z-index:-2;
+        z-index: -2;
+    }
+
+    .ball-container .ball {
+        position: fixed;
+        left: 32px;
+        bottom: 22px;
+        z-index: 200;
+    }
+
+    .drop-enter-active, .drop-leave-active {
+        transition: all .4s;
+    }
+
+    .ball .inner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: rgb(0, 160, 220);
+        transition: all .4s;
     }
 </style>

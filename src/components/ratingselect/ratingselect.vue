@@ -95,7 +95,7 @@
     }
 
     .block .count {
-        font-size: 8px;
+        font-size: 12px;
         margin-left: 2px;
         line-height: 16px;
     }
