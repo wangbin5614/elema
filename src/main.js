@@ -23,20 +23,12 @@ const ALL = 2;
 const vuex = new Vuex.Store({
     state: {
         onlyContent: bool,
-        selectType: ALL,
-        targetPosi: {
-            left: 0,
-            top: 0
-        }
+        selectType: ALL
     },
     mutations: {
         initState (state) {
             state.onlyContent = bool;
             state.selectType = ALL;
-        },
-        changePosi(state, pos) {
-            state.targetPosi.left = pos.left;
-            state.targetPosi.top = pos.top;
         },
         toggleContent (state) {
             state.onlyContent = !state.onlyContent;

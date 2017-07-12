@@ -25,7 +25,6 @@
                 if (!event._constructed) {
                     return;
                 }
-                this.$store.commit('changePosi', {left: this.getLeft(event.target), top: this.getTop(event.target)});
                 if (!this.food.count) {
                     Vue.set(this.food, 'count', 1);
                 } else {
