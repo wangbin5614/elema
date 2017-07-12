@@ -24,7 +24,10 @@ const vuex = new Vuex.Store({
     state: {
         onlyContent: bool,
         selectType: ALL,
-        targetPosi: {}
+        targetPosi: {
+            left: 0,
+            top: 0
+        }
     },
     mutations: {
         initState (state) {
@@ -32,10 +35,8 @@ const vuex = new Vuex.Store({
             state.selectType = ALL;
         },
         changePosi(state, pos) {
-            state.targetPosi = pos;
-        },
-        initPosi (state) {
-            state.targetPosi = {};
+            state.targetPosi.left = pos.left;
+            state.targetPosi.top = pos.top;
         },
         toggleContent (state) {
             state.onlyContent = !state.onlyContent;

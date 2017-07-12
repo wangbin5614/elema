@@ -39,14 +39,13 @@
                 if (!event._constructed) {
                     return;
                 }
-                this.$store.commit('changePosi', event.target);
-                console.log(this.getTop(event.target));
-                console.log(this.getLeft(event.target));
+                this.$store.commit('changePosi', {left: this.getLeft(event.target), top: this.getTop(event.target)});
                 if (!this.food.count) {
                     Vue.set(this.food, 'count', 1);
                 } else {
                     this.food.count++;
                 }
+                this.$emit('cartAdd', event);
             },
             decreaseCart(event) {
                 if (!event._constructed) {

@@ -31,7 +31,7 @@
                                                                                   class="old">¥{{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper" ref="cartButton">
-                                    <cartcontrol :food="food"></cartcontrol>
+                                    <cartcontrol :food="food" @cartAdd="_drop"></cartcontrol>
                                 </div>
                             </div>
                         </li>
@@ -39,9 +39,9 @@
                 </li>
             </ul>
         </div>
-        <shopcart :select-foods="selectedFoods" :delivery-price="seller.deliveryPrice"
-                  :min-price="seller.minPrice" ref="shopCart"></shopcart>
-        <food :food="selectedFood" ref="food" v-if="selectedFood.name"></food>
+        <shopcart ref="shopCart" :select-foods="selectedFoods" :delivery-price="seller.deliveryPrice"
+                  :min-price="seller.minPrice"></shopcart>
+        <food :food="selectedFood" ref="food" v-if="selectedFood.name" @foodCartAdd="_drop"></food>
     </div>
 </template>
 
@@ -156,6 +156,9 @@
                 setTimeout(() => {
                     this.$refs.food.show();
                 }, 100);
+            },
+            _drop(event) {
+                this.$refs.shopCart.drop(event);
             }
         },
         components: {

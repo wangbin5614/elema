@@ -36,11 +36,12 @@
             <div class="list-background" v-show="listShow" @click="hideList"></div>
         </transition>
         <div class="ball-container">
-            <transition-group name="drop">
-                <div v-for="(ball,index) in balls" v-show="ball.show" class="ball" :key="index">
-                    <div class="inner"></div>
+            <transition name="drop" v-for="(ball,index) in balls" :key="ball" @before-enter="beforeEnter"
+                        @enter="enters" @after-enter="afterEnter">
+                <div v-show="ball.show" class="ball">
+                    <div class="inner inner-hook"></div>
                 </div>
-            </transition-group>
+            </transition>
         </div>
     </div>
 </template>
@@ -85,7 +86,8 @@
                     {
                         show: false
                     }
-                ]
+                ],
+                dropBalls: []
             };
         },
         computed: {
@@ -137,13 +139,7 @@
                     });
                 }
                 return this.fold;
-            },
-            drop() {
-                console.log(1111);
             }
-        },
-        components: {
-            'cartcontrol': cartcontrol
         },
         methods: {
             toggleList() {
@@ -161,7 +157,57 @@
                         Vue.delete(food, 'count');
                     }
                 });
+            },
+            drop(el) {
+                for (let i = 0; i < this.balls.length; i++) {
+                    let ball = this.balls[i];
+                    if (!ball.show) {
+                        ball.show = true;
+                        ball.el = el.target;
+                        this.dropBalls.push(ball);
+                        return;
+                    }
+                }
+            },
+            beforeEnter(el) {
+                let count = this.balls.length;
+                while (count--) {
+                    let ball = this.balls[count];
+                    if (ball.show) {
+                        let rect = ball.el.getBoundingClientRect();
+                        let x = rect.left - 32;
+                        let y = -(window.innerHeight - rect.top - 22);
+                        el.style.display = '';
+                        el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+                        el.style.transform = `translate3d(0,${y}px,0)`;
+                        let inner = el.getElementsByClassName('inner-hook')[0];
+                        inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+                        inner.style.transform = `translate3d(${x}px,0,0)`;
+                    }
+                }
+            },
+            enters(el, done) {
+                /* eslint-disable no-unused-vars */
+                let refresh = el.offsetHeight;
+                this.$nextTick(() => {
+                    el.style.webkitTransform = 'translate3d(0,0,0)';
+                    el.style.transform = 'translate3d(0,0,0)';
+                    let inner = el.getElementsByClassName('inner-hook')[0];
+                    inner.style.webkitTransform = 'translate3d(0,0,0)';
+                    inner.style.transform = 'translate3d(0,0,0)';
+                    el.addEventListener('transitionend', done);
+                });
+            },
+            afterEnter(el) {
+                let ball = this.dropBalls.shift();
+                if (ball) {
+                    ball.show = false;
+                    el.style.display = 'none';
+                }
             }
+        },
+        components: {
+            'cartcontrol': cartcontrol
         }
     };
 </script>
@@ -369,11 +415,8 @@
         position: fixed;
         left: 32px;
         bottom: 22px;
-        z-index: 200;
-    }
-
-    .drop-enter-active, .drop-leave-active {
-        transition: all .4s;
+        z-index: 2000;
+        transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
     }
 
     .ball .inner {
@@ -381,6 +424,6 @@
         height: 16px;
         border-radius: 50%;
         background-color: rgb(0, 160, 220);
-        transition: all .4s;
+        transition: all .4s linear;
     }
 </style>

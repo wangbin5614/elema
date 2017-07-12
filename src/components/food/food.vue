@@ -19,7 +19,7 @@
                         <span v-show="food.oldPrice" class="old">¥{{food.oldPrice}}</span>
                     </div>
                     <div class="cartcontrol-wrapper" v-show="food.count">
-                        <cartcontrol :food="food"></cartcontrol>
+                        <cartcontrol :food="food" v-on:cartAdd="_drop"></cartcontrol>
                     </div>
                     <transition name="fade">
                         <div class="buy" v-show="!food.count" @click="addCart($event)">加入购物车</div>
@@ -149,6 +149,9 @@
             hideFood () {
                 this.isShow = !this.isShow;
                 this.$refs.ratingselect.initData();
+            },
+            _drop(event) {
+                this.$emit('foodCartAdd', event);
             }
         },
         components: {
