@@ -145,6 +145,7 @@
                     return;
                 }
                 Vue.set(this.food, 'count', 1);
+                this.$emit('foodCartAdd', event);
             },
             hideFood () {
                 this.isShow = !this.isShow;
