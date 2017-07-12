@@ -37,7 +37,7 @@
         </transition>
         <div class="ball-container">
             <transition name="drop" v-for="(ball,index) in balls" :key="ball" @before-enter="beforeEnter"
-                        @enter="enters" @after-enter="afterEnter">
+                        @enter="enter" @after-enter="afterEnter">
                 <div v-show="ball.show" class="ball">
                     <div class="inner inner-hook"></div>
                 </div>
@@ -186,8 +186,9 @@
                     }
                 }
             },
-            enters(el, done) {
+            enter(el, done) {
                 /* eslint-disable no-unused-vars */
+//                触发重绘html
                 let refresh = el.offsetHeight;
                 this.$nextTick(() => {
                     el.style.webkitTransform = 'translate3d(0,0,0)';
@@ -195,6 +196,7 @@
                     let inner = el.getElementsByClassName('inner-hook')[0];
                     inner.style.webkitTransform = 'translate3d(0,0,0)';
                     inner.style.transform = 'translate3d(0,0,0)';
+//                    Vue为了知道过渡的完成，必须设置相应的事件监听器。
                     el.addEventListener('transitionend', done);
                 });
             },
