@@ -21,20 +21,6 @@
             }
         },
         methods: {
-            getTop(e) {
-                let offsetTop = e.offsetTop;
-                if (e.offsetParent != null) {
-                    offsetTop += this.getTop(e.offsetParent);
-                }
-                return offsetTop;
-            },
-            getLeft(e) {
-                let offsetLeft = e.offsetLeft;
-                if (e.offsetParent != null) {
-                    offsetLeft += this.getLeft(e.offsetParent);
-                }
-                return offsetLeft;
-            },
             addCart(event) {
                 if (!event._constructed) {
                     return;
